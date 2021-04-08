@@ -4,14 +4,18 @@ import 'package:intl/intl.dart';
 
 class TransactionList extends StatelessWidget {
   final List<Transaction> transactions;
+  final ScrollController scrollController;
 
-  TransactionList(this.transactions);
+  TransactionList(this.transactions, this.scrollController);
 
   @override
   Widget build(BuildContext context) {
     return Container(
         height: 300,
         child: ListView.builder(
+          controller: scrollController,
+          reverse: true,
+          itemCount: transactions.length,
           itemBuilder: (ctx, index) {
             return Card(
               child: Row(
@@ -27,12 +31,12 @@ class TransactionList extends StatelessWidget {
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20,
-                        color: Colors.deepOrange,
+                        color: Theme.of(context).primaryColorDark,
                       ),
                     ),
                     decoration: BoxDecoration(
                       border: Border.all(
-                        color: Colors.deepOrange,
+                        color: Theme.of(context).primaryColorDark,
                         width: 2,
                       ),
                     ),
@@ -44,10 +48,7 @@ class TransactionList extends StatelessWidget {
                     children: <Widget>[
                       Text(
                         transactions[index].title,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: Theme.of(context).textTheme.headline6,
                       ),
                       Text(
                         DateFormat('dd-MMM-yyyy hh:mm a')
@@ -55,7 +56,7 @@ class TransactionList extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.normal,
-                          color: Colors.grey,
+                          color: Theme.of(context).unselectedWidgetColor,
                         ),
                       ),
                     ],
@@ -64,7 +65,6 @@ class TransactionList extends StatelessWidget {
               ),
             );
           },
-          itemCount: transactions.length,
         ));
   }
 }

@@ -10,7 +10,26 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Expense Tracker App',
+      title: 'Expense Tracker',
+      theme: ThemeData(
+          primarySwatch: Colors.deepOrange,
+          accentColor: Colors.blue,
+          fontFamily: 'Quicksand',
+          textTheme: ThemeData.light().textTheme.copyWith(
+                headline6: TextStyle(
+                  fontFamily: 'OpenSans',
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+          appBarTheme: AppBarTheme(
+            textTheme: ThemeData.light().textTheme.copyWith(
+                    headline6: TextStyle(
+                  fontFamily: 'OpenSans',
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                )),
+          )),
       debugShowCheckedModeBanner: false,
       home: MyHomePage(),
     );
@@ -23,7 +42,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
+  ScrollController _scrollController = ScrollController();
   final List<Transaction> _userTransactions = [
     Transaction(
       id: 't1',
@@ -48,6 +67,11 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _userTransactions.add(newTX);
     });
+    _scrollController.animateTo(
+      _scrollController.position.maxScrollExtent + 100,
+      curve: Curves.easeOut,
+      duration: const Duration(milliseconds: 300),
+    );
   }
 
   void _startAddNewTransaction(BuildContext ctx) {
@@ -78,11 +102,11 @@ class _MyHomePageState extends State<MyHomePage> {
             Container(
               width: double.infinity,
               child: Card(
-                color: Colors.blue,
+                color: Theme.of(context).backgroundColor,
                 child: Text('Chart!'),
               ),
             ),
-            TransactionList(_userTransactions),
+            TransactionList(_userTransactions, _scrollController),
           ],
         ),
       ),
