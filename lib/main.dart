@@ -1,3 +1,5 @@
+import 'package:expense_tracker/widgets/chart.dart';
+
 import './widgets/new_transaction.dart';
 import './widgets/transaction_list.dart';
 import './models/transaction.dart';
@@ -44,18 +46,18 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   ScrollController _scrollController = ScrollController();
   final List<Transaction> _userTransactions = [
-    Transaction(
-      id: 't1',
-      title: 'Petrol',
-      amount: 995.50,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: 't2',
-      title: 'Food',
-      amount: 455.44,
-      date: DateTime.now(),
-    ),
+    // Transaction(
+    //   id: 't1',
+    //   title: 'Petrol',
+    //   amount: 995.50,
+    //   date: DateTime.now(),
+    // ),
+    // Transaction(
+    //   id: 't2',
+    //   title: 'Food',
+    //   amount: 455.44,
+    //   date: DateTime.now(),
+    // ),
   ];
   _addNewTransaction(String txTitle, double txAmount) {
     final newTX = Transaction(
@@ -67,11 +69,24 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _userTransactions.add(newTX);
     });
-    _scrollController.animateTo(
-      _scrollController.position.maxScrollExtent + 100,
-      curve: Curves.easeOut,
-      duration: const Duration(milliseconds: 300),
-    );
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(
+        (_scrollController.position.maxScrollExtent +
+            _scrollController.position.pixels),
+        curve: Curves.easeOut,
+        duration: const Duration(milliseconds: 300),
+      );
+    }
+  }
+
+  List<Transaction> get _recentTransactions {
+    return _userTransactions.where((tx) {
+      return tx.date.isAfter(
+        DateTime.now().subtract(
+          Duration(days: 7),
+        ),
+      );
+    }).toList();
   }
 
   void _startAddNewTransaction(BuildContext ctx) {
@@ -99,13 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
           //mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Container(
-              width: double.infinity,
-              child: Card(
-                color: Theme.of(context).backgroundColor,
-                child: Text('Chart!'),
-              ),
-            ),
+            Chart(_recentTransactions),
             TransactionList(_userTransactions, _scrollController),
           ],
         ),
