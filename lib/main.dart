@@ -1,5 +1,4 @@
-import 'package:expense_tracker/widgets/chart.dart';
-
+import './widgets/chart.dart';
 import './widgets/new_transaction.dart';
 import './widgets/transaction_list.dart';
 import './models/transaction.dart';
@@ -71,8 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
     });
     if (_scrollController.hasClients) {
       _scrollController.animateTo(
-        (_scrollController.position.maxScrollExtent +
-            _scrollController.position.pixels),
+        (_scrollController.position.maxScrollExtent + 60),
         curve: Curves.easeOut,
         duration: const Duration(milliseconds: 300),
       );
@@ -111,7 +109,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: SingleChildScrollView(
         child: Column(
-          //mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Chart(_recentTransactions),
