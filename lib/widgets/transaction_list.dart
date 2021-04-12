@@ -5,13 +5,14 @@ import 'package:intl/intl.dart';
 class TransactionList extends StatelessWidget {
   final List<Transaction> transactions;
   final ScrollController scrollController;
+  final Function deleteTx;
 
-  TransactionList(this.transactions, this.scrollController);
+  TransactionList(this.transactions, this.scrollController, this.deleteTx);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 350,
+        height: 470,
         child: transactions.isEmpty
             ? Column(
                 children: [
@@ -37,50 +38,33 @@ class TransactionList extends StatelessWidget {
                 itemCount: transactions.length,
                 itemBuilder: (ctx, index) {
                   return Card(
-                    child: Row(
-                      children: <Widget>[
-                        //Container to display amount
-                        Container(
-                          margin: EdgeInsets.symmetric(
-                            horizontal: 15,
-                            vertical: 10,
+                    elevation: 6,
+                    margin: EdgeInsets.symmetric(
+                      vertical: 8,
+                      horizontal: 5,
+                    ),
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        radius: 40,
+                        child: Padding(
+                          padding: EdgeInsets.all(6.0),
+                          child: FittedBox(
+                            child: Text('₹${transactions[index].amount}'),
                           ),
-                          child: Text(
-                            '₹ ${transactions[index].amount.toStringAsFixed(2)}',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                              color: Theme.of(context).primaryColorDark,
-                            ),
-                          ),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Theme.of(context).primaryColorDark,
-                              width: 2,
-                            ),
-                          ),
-                          padding: EdgeInsets.all(10),
                         ),
-                        //Column for the title and date of transaction
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              transactions[index].title,
-                              style: Theme.of(context).textTheme.headline6,
-                            ),
-                            Text(
-                              DateFormat('dd-MMM-yyyy hh:mm a')
-                                  .format(transactions[index].date),
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.normal,
-                                color: Theme.of(context).unselectedWidgetColor,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+                      ),
+                      title: Text(
+                        transactions[index].title,
+                        style: Theme.of(context).textTheme.headline6,
+                      ),
+                      subtitle: Text(
+                        DateFormat.yMMMd().format(transactions[index].date),
+                      ),
+                      trailing: IconButton(
+                        icon: Icon(Icons.delete),
+                        color: Theme.of(context).errorColor,
+                        onPressed: () => deleteTx(transactions[index].id),
+                      ),
                     ),
                   );
                 },

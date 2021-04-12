@@ -58,15 +58,18 @@ class _MyHomePageState extends State<MyHomePage> {
     //   date: DateTime.now(),
     // ),
   ];
-  _addNewTransaction(String txTitle, double txAmount) {
+  _addNewTransaction(String txTitle, double txAmount, DateTime txDate) {
     final newTX = Transaction(
       title: txTitle,
       amount: txAmount,
-      date: DateTime.now(),
+      date: txDate,
       id: DateTime.now().toString(),
     );
     setState(() {
       _userTransactions.add(newTX);
+      _userTransactions.sort((tx1, tx2) {
+        return tx1.date.compareTo(tx2.date);
+      });
     });
     if (_scrollController.hasClients) {
       _scrollController.animateTo(
@@ -95,6 +98,12 @@ class _MyHomePageState extends State<MyHomePage> {
         });
   }
 
+  void _deleteTransaction(String id) {
+    setState(() {
+      _userTransactions.removeWhere((tx) => tx.id == id);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -113,7 +122,8 @@ class _MyHomePageState extends State<MyHomePage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Chart(_recentTransactions),
-            TransactionList(_userTransactions, _scrollController),
+            TransactionList(
+                _userTransactions, _scrollController, _deleteTransaction),
           ],
         ),
       ),
