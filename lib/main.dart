@@ -51,7 +51,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  ScrollController _scrollController = ScrollController();
   final List<Transaction> _userTransactions = [
     // Transaction(
     //   id: 't1',
@@ -76,17 +75,12 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _userTransactions.add(newTX);
       _userTransactions.sort((tx1, tx2) {
-        return tx1.date.compareTo(tx2.date);
+        return tx2.date.compareTo(tx1.date);
       });
     });
-    if (_scrollController.hasClients) {
-      _scrollController.animateTo(
-        (_scrollController.position.maxScrollExtent + 60),
-        curve: Curves.easeOut,
-        duration: const Duration(milliseconds: 300),
-      );
-    }
   }
+
+  bool _showChart = false;
 
   List<Transaction> get _recentTransactions {
     return _userTransactions.where((tx) {
@@ -114,7 +108,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    var appBar = AppBar(
+    final isLandscape =
+        (MediaQuery.of(context).orientation == Orientation.landscape);
+    final appBar = AppBar(
       title: Text('Expense Tracker'),
       actions: <Widget>[
         IconButton(
@@ -123,6 +119,14 @@ class _MyHomePageState extends State<MyHomePage> {
         )
       ],
     );
+    final txListWidget = Container(
+      height: (MediaQuery.of(context).size.height -
+              appBar.preferredSize.height -
+              MediaQuery.of(context).padding.top) *
+          0.7,
+      child: TransactionList(
+          _userTransactions, _deleteTransaction),
+    );
     return Scaffold(
       appBar: appBar,
       body: SingleChildScrollView(
@@ -130,21 +134,45 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Container(
-              height: (MediaQuery.of(context).size.height -
-                      appBar.preferredSize.height -
-                      MediaQuery.of(context).padding.top) *
-                  0.3,
-              child: Chart(_recentTransactions),
-            ),
-            Container(
-              height: (MediaQuery.of(context).size.height -
-                      appBar.preferredSize.height -
-                      MediaQuery.of(context).padding.top) *
-                  0.7,
-              child: TransactionList(
-                  _userTransactions, _scrollController, _deleteTransaction),
-            ),
+            if (isLandscape)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Show Chart ',
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
+                  Switch(
+                    value: _showChart,
+                    onChanged: (newValue) {
+                      setState(
+                        () {
+                          _showChart = newValue;
+                        },
+                      );
+                    },
+                  )
+                ],
+              ),
+            if (!isLandscape)
+              Container(
+                height: (MediaQuery.of(context).size.height -
+                        appBar.preferredSize.height -
+                        MediaQuery.of(context).padding.top) *
+                    0.3,
+                child: Chart(_recentTransactions),
+              ),
+            if (!isLandscape) txListWidget,
+            if (isLandscape)
+              _showChart
+                  ? Container(
+                      height: (MediaQuery.of(context).size.height -
+                              appBar.preferredSize.height -
+                              MediaQuery.of(context).padding.top) *
+                          0.7,
+                      child: Chart(_recentTransactions),
+                    )
+                  : txListWidget,
           ],
         ),
       ),

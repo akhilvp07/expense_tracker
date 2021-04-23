@@ -51,59 +51,66 @@ class _NewTransactionState extends State<NewTransaction> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 5,
-      child: Container(
-        padding: EdgeInsets.all(10),
-        child: ListView(
-          children: <Widget>[
-            TextField(
-              decoration: InputDecoration(labelText: 'Title'),
-              onSubmitted: (_) => _submitData(),
-              // onChanged: (value) {
-              //   titleInput = value;
-              // },
-              controller: _titleController,
-            ),
-            TextField(
-              decoration: InputDecoration(labelText: 'Amount'),
-              keyboardType: TextInputType.number,
-              onSubmitted: (_) => _submitData(),
-              // onChanged: (value) {
-              //   amountInput = value;
-              // },
-              controller: _amountController,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Container(
-                  alignment: Alignment.centerLeft,
-                  child: Icon(
-                    Icons.today,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                ),
-                OutlinedButton(
-                  onPressed: _presentDatePicker,
-                  child: Text(DateFormat.yMMMd().format(_selectedDate)),
-                  style: OutlinedButton.styleFrom(
-                    alignment: Alignment.centerLeft,
-                    shadowColor: Theme.of(context).primaryColor,
-                    textStyle: TextStyle(
-                        color: Theme.of(context).textTheme.button.color),
-                  ),
-                ),
-              ],
-            ),
-            Align(
-              alignment: Alignment.topRight,
-              child: ElevatedButton(
-                child: Text('Add Transaction'),
-                onPressed: _submitData,
+    return SingleChildScrollView(
+      child: Card(
+        elevation: 5,
+        child: Container(
+          padding: EdgeInsets.only(
+            top: 10,
+            left: 10,
+            right: 10,
+            bottom: 10 + MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: Column(
+            children: <Widget>[
+              TextField(
+                decoration: InputDecoration(labelText: 'Title'),
+                onSubmitted: (_) => _submitData(),
+                // onChanged: (value) {
+                //   titleInput = value;
+                // },
+                controller: _titleController,
               ),
-            )
-          ],
+              TextField(
+                decoration: InputDecoration(labelText: 'Amount'),
+                keyboardType: TextInputType.number,
+                onSubmitted: (_) => _submitData(),
+                // onChanged: (value) {
+                //   amountInput = value;
+                // },
+                controller: _amountController,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    child: Icon(
+                      Icons.today,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+                  OutlinedButton(
+                    onPressed: _presentDatePicker,
+                    child: Text(DateFormat.yMMMd().format(_selectedDate)),
+                    style: OutlinedButton.styleFrom(
+                      alignment: Alignment.centerLeft,
+                      shadowColor: Theme.of(context).primaryColor,
+                      textStyle: TextStyle(
+                          color: Theme.of(context).textTheme.button.color),
+                    ),
+                  ),
+                ],
+              ),
+              Align(
+                alignment: Alignment.topRight,
+                child: ElevatedButton(
+                  child: Text('Add Transaction'),
+                  onPressed: _submitData,
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
