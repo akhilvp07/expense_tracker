@@ -64,6 +64,7 @@ class _NewTransactionState extends State<NewTransaction> {
           child: Column(
             children: <Widget>[
               TextField(
+                autofocus: true,
                 decoration: InputDecoration(labelText: 'Title'),
                 onSubmitted: (_) => _submitData(),
                 // onChanged: (value) {
@@ -72,6 +73,7 @@ class _NewTransactionState extends State<NewTransaction> {
                 controller: _titleController,
               ),
               TextField(
+                autofocus: true,
                 decoration: InputDecoration(labelText: 'Amount'),
                 keyboardType: TextInputType.number,
                 onSubmitted: (_) => _submitData(),
@@ -80,27 +82,26 @@ class _NewTransactionState extends State<NewTransaction> {
                 // },
                 controller: _amountController,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    child: Icon(
-                      Icons.today,
-                      color: Theme.of(context).primaryColor,
+              Align(
+                alignment: Alignment.topLeft,
+                child: OutlinedButton.icon(
+                  autofocus: true,
+                  onPressed: _presentDatePicker,
+                  icon: Icon(Icons.today_rounded),
+                  label: Text(DateFormat.yMMMd().format(_selectedDate)),
+                  style: OutlinedButton.styleFrom(
+                    shadowColor: Theme.of(context).primaryColor,
+                    padding: EdgeInsets.only(
+                      left: 0,
+                      right: 4,
+                      top: 4,
+                      bottom: 4,
                     ),
+                    textStyle: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).textTheme.button.color),
                   ),
-                  OutlinedButton(
-                    onPressed: _presentDatePicker,
-                    child: Text(DateFormat.yMMMd().format(_selectedDate)),
-                    style: OutlinedButton.styleFrom(
-                      alignment: Alignment.centerLeft,
-                      shadowColor: Theme.of(context).primaryColor,
-                      textStyle: TextStyle(
-                          color: Theme.of(context).textTheme.button.color),
-                    ),
-                  ),
-                ],
+                ),
               ),
               Align(
                 alignment: Alignment.topRight,
